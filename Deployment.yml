@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-java-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-app
+  template:
+    metadata:
+      labels:
+        app: java-app
+    spec:
+      containers:
+      - name: java-app
+        image: public.ecr.aws/y9a2o4x3/newjavajob:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+# service type loadbalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-app-svc
+spec:
+  type: Nodeport
+  selector:
+    app: java-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer

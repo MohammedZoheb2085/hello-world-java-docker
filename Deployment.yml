@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-java1-deployment
+  name: my-java-deployment
 spec:
   replicas: 1
   selector:
@@ -22,12 +22,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: java1-app-svc
+  name: java-app-svc
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: java-app
   ports:
     - protocol: TCP
       port: 8080
       targetPort: 8080
+
+has context menu

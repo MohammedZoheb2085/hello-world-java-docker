@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-java-deployment
+  name: my-java1-deployment
 spec:
   replicas: 1
   selector:
@@ -22,7 +22,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: java-app-svc
+  name: java1-app-svc
 spec:
   type: LoadBalancer
   selector:

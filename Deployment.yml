@@ -1,47 +1,33 @@
-agent:
-    any
-  environment:
-    ARTIFACTORY_URL: 'http://artifactory.example.com/artifactory'
-    ARTIFACTORY_REPO: 'my-repo'
-    AWS_REGION: 'us-west-2'
-    VM_DNS: 'myapp.example.com'
-  stages:
-    - stage: Checkout Code
-      steps:
-        - checkout:
-            scm: git
-            url: 'https://github.com/edwin/hello-world-java-docker.git'
-            branch: 'main'
- 
-    - stage: Install Dependencies
-      steps:
-        - sh: |
-            echo "Installing dependencies..."
-            npm install
- 
-    - stage: Code Checks and Static Analysis
-      steps:
-        - sh: |
-            echo "Running code checks..."
-            npm run lint
-            echo "Running static code analysis..."
-            npm run analyze
- 
-    - stage: Unit Tests and Code Coverage
-      steps:
-        - sh: |
-            echo "Running unit tests..."
-            npm test
-            echo "Checking code coverage..."
-            npm run coverage
- 
-    - stage: Build Application
-      steps:
-        - sh: |
-            echo "Building application..."
-            npm run build
- 
-    - stage: Upload to Artifactory
-      steps:
-        - script: |
-            def server = Artifactory.server 'artifact
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-java-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: java-app
+  template:
+    metadata:
+      labels:
+        app: java-app
+    spec:
+      containers:
+      - name: java-app
+        image: public.ecr.aws/y9a2o4x3/newjavajob:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-app-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: java-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
